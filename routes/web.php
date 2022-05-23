@@ -3,6 +3,7 @@
 use App\Http\Controllers\ContactController;
 use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
+use App\Models\User;
 
 
 /*
@@ -28,3 +29,13 @@ Route::get('/about', function(){
 });
 
 Route::get('/contact-9023848', [ContactController::class, 'index'])->name('con');
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified'
+])->group(function () {
+    Route::get('/dashboard', function () {
+        $users = User::all();
+        return view('dashboard', compact("users"));
+    })->name('dashboard');
+});
